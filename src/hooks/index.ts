@@ -23,7 +23,7 @@ export const useDebounce = <V>(value: V, delay?: number): V => {
 //   removeIndex: (args: number) => void
 //   add: (args: V) => void
 // }
-// 这种写法，不知道为什么V不能传给add方法
+// TODO: 这种写法，不知道为什么V不能传给add方法
 // const useArray: <V>(args: V[]) => useArrayReturn<V> = (args) => {}
 export const useArray = <V>(args: V[]) => {
   const [value, setValue] = useState(args)
