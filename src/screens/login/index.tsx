@@ -1,14 +1,21 @@
 import { FormEvent } from 'react'
-import axios from 'axios'
 
 // 环境变量配置Api的base_url
 const API_BASE_URL = process.env.REACT_APP_API_URL
 
 const Login = () => {
   const login = (params: { username: string; password: string }) => {
-    axios
-      .post(`${API_BASE_URL}/login`, params)
-      .then((res) => {})
+    fetch(`${API_BASE_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    })
+      .then(async (response: Response) => {
+        if (response.ok) {
+        }
+      })
       .catch((e) => {})
   }
   // 默认表单提交方式

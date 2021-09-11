@@ -1,13 +1,10 @@
-// import ProjectList from './screens/project-list'
-import Login from './screens/login'
-// import TsReactTest from './homework/TsReactTest' // useArray作业
-
+// import Login from 'screens/login'
+import Project from 'screens/project-list/index'
 function App() {
   return (
     <div className='App'>
-      <Login />
-      {/* <ProjectList /> */}
-      {/* <TsReactTest /> */}
+      {/* <Login /> */}
+      <Project />
     </div>
   )
 }

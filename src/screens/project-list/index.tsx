@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import qs from 'qs'
-import { useMount, useDebounce } from '../../hooks'
-import { cleanObject } from '../../common/util'
+import { useMount, useDebounce } from 'hooks'
+import { cleanObject } from 'common/util'
 
 import List from './list'
 import SearchPanel from './search-panel'
@@ -19,22 +18,29 @@ const ProjectListScreen = () => {
   // 获取负责人数据
   const [users, setUsers] = useState([])
   useMount(() => {
-    axios
-      .get(`${API_BASE_URL}/users`)
-      .then((res) => {
-        setUsers(res.data)
+    fetch(`${API_BASE_URL}/users`, {
+      method: 'Get'
+    })
+      .then(async (response: Response) => {
+        if (response.ok) {
+          setUsers(await response.json())
+        }
       })
       .catch((e) => {})
   })
   // 获取项目数据
   const [list, setList] = useState([])
   useEffect(() => {
-    axios
-      .get(
-        `${API_BASE_URL}/projects?${qs.stringify(cleanObject(debounceParam))}`
-      )
-      .then((res) => {
-        setList(res.data)
+    fetch(
+      `${API_BASE_URL}/projects?${qs.stringify(cleanObject(debounceParam))}`,
+      {
+        method: 'Get'
+      }
+    )
+      .then(async (response: Response) => {
+        if (response.ok) {
+          setList(await response.json())
+        }
       })
       .catch((e) => {})
   }, [debounceParam])
