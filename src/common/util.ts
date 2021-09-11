@@ -1,5 +1,5 @@
 interface cleanObjectArgs {
-  [propName: string]: any
+  [propName: string]: unknown
 }
 
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value)

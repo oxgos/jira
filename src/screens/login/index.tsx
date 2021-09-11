@@ -1,23 +1,8 @@
+import { useAuth } from 'context/auth-context'
 import { FormEvent } from 'react'
 
-// 环境变量配置Api的base_url
-const API_BASE_URL = process.env.REACT_APP_API_URL
-
 const Login = () => {
-  const login = (params: { username: string; password: string }) => {
-    fetch(`${API_BASE_URL}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(params)
-    })
-      .then(async (response: Response) => {
-        if (response.ok) {
-        }
-      })
-      .catch((e) => {})
-  }
+  const { user, login } = useAuth()
   // 默认表单提交方式
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -27,6 +12,7 @@ const Login = () => {
   }
   return (
     <form onSubmit={handleSubmit}>
+      {user ? <div>登陆成功，用户名: {user.name}</div> : null}
       <div>
         <label htmlFor='account'>账号</label>
         <input type='text' id='account' />

@@ -1,10 +1,8 @@
-// import Login from 'screens/login'
-import Project from 'screens/project-list/index'
+import Login from 'screens/login'
 function App() {
   return (
     <div className='App'>
-      {/* <Login /> */}
-      <Project />
+      <Login />
     </div>
   )
 }
