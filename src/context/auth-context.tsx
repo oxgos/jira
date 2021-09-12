@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
+// auth hook
 export const useAuth = () => {
   const context = useContext(AuthContext)
   if (!context) {
@@ -45,3 +46,15 @@ export const useAuth = () => {
   }
   return context
 }
+
+// TODO: auth consumer
+// export const authConsumer =
+//   <P extends {}>(Target: React.ComponentClass<P>) =>
+//   (props: P): JSX.Element =>
+//     (
+//       <AuthContext.Consumer>
+//         {(auth) => {
+//           ;<Target {...auth} {...props} />
+//         }}
+//       </AuthContext.Consumer>
+//     )
