@@ -30,7 +30,7 @@ const ProjectListScreen = () => {
     })
       .then(setList)
       .catch((e) => {})
-  }, [debounceParam])
+  }, [debounceParam]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div>
       <SearchPanel

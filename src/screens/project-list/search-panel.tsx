@@ -1,26 +1,27 @@
 import { SearchPanelProps } from './interface'
+import { Form, Input, Select } from 'antd'
 
 const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
   return (
-    <form action=''>
-      <input
+    <Form>
+      <Input
         type='text'
         placeholder='项目名'
         value={param.name}
         onChange={(e) => setParam({ ...param, name: e.target.value })}
       />
-      <select
+      <Select
         value={param.personId}
-        onChange={(e) => setParam({ ...param, personId: e.target.value })}
+        onChange={(value) => setParam({ ...param, personId: value })}
       >
-        <option value=''>{'负责人'}</option>
+        <Select.Option value=''>{'负责人'}</Select.Option>
         {users.map((user) => (
           <option value={user.id} key={user.id}>
             {user.name}
           </option>
         ))}
-      </select>
-    </form>
+      </Select>
+    </Form>
   )
 }
 

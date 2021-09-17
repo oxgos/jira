@@ -1,23 +1,29 @@
 import { ListProps } from './interface'
+import { Table } from 'antd'
 
 const List = ({ list, users }: ListProps) => {
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>项目名称</th>
-          <th>负责人</th>
-        </tr>
-      </thead>
-      <tbody>
-        {list.map((item) => (
-          <tr key={item.id}>
-            <td>{item.name}</td>
-            <td>{users.find((user) => user.id === item.personId)?.name}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Table
+      pagination={false}
+      columns={[
+        {
+          title: '项目名称',
+          dataIndex: 'name',
+          sorter: (a, b) => a.name.localeCompare(b.name) // localeCompare可以将中文字符排序
+        },
+        {
+          title: '负责人',
+          render(value, project) {
+            return (
+              <span>
+                {users.find((user) => user.id === project.personId)?.name}
+              </span>
+            )
+          }
+        }
+      ]}
+      dataSource={list}
+    />
   )
 }
 

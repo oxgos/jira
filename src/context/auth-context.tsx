@@ -8,6 +8,13 @@ interface AuthForm {
   password: string
 }
 
+interface AuthCtx {
+  user: User | null
+  login: (from: AuthForm) => Promise<void>
+  register: (from: AuthForm) => Promise<void>
+  logout: () => Promise<void>
+}
+
 // 初始化用户信息
 const bootstrapUser = async () => {
   let user = null
@@ -20,15 +27,7 @@ const bootstrapUser = async () => {
 }
 
 // createContext的泛型类型: 根据Provider所提供的value
-const AuthContext = react.createContext<
-  | {
-      user: User | null
-      login: (from: AuthForm) => Promise<void>
-      register: (from: AuthForm) => Promise<void>
-      logout: () => Promise<void>
-    }
-  | undefined
->(undefined)
+const AuthContext = react.createContext<AuthCtx | undefined>(undefined)
 AuthContext.displayName = 'AuthContext'
 
 // 这是一个HOC组件，不是自定义的hook
@@ -90,10 +89,10 @@ export const useAuth = () => {
 // TODO: auth consumer
 // export const authConsumer =
 //   <P extends {}>(Target: React.ComponentClass<P>) =>
-//   (props: P): JSX.Element =>
+//   (props: P & AuthCtx) =>
 //     (
 //       <AuthContext.Consumer>
-//         {(auth) => {
+//         {(auth: AuthCtx | undefined) => {
 //           ;<Target {...auth} {...props} />
 //         }}
 //       </AuthContext.Consumer>
