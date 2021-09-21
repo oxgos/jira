@@ -1,3 +1,4 @@
+import styled from '@emotion/styled'
 import { useState, useEffect } from 'react'
 import { useMount, useDebounce } from 'hooks'
 import { cleanObject } from 'common/util'
@@ -32,15 +33,20 @@ const ProjectListScreen = () => {
       .catch((e) => {})
   }, [debounceParam]) // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div>
+    <Container>
+      <h1>项目列表</h1>
       <SearchPanel
         users={users}
         param={param}
         setParam={setParam}
       ></SearchPanel>
       <List list={list} users={users}></List>
-    </div>
+    </Container>
   )
 }
+
+const Container = styled.div`
+  padding: 3.2rem;
+`
 
 export default ProjectListScreen
