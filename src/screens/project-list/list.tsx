@@ -23,6 +23,7 @@ const List = ({ list, users }: ListProps) => {
         }
       ]}
       dataSource={list}
+      rowKey={(record) => record.id} // 解决: Warning: Each child in a list should have a unique "key" prop
     />
   )
 }
