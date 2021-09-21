@@ -18,7 +18,7 @@
     "axios": "^0.21.1",
     "craco-less": "^1.20.0",
     "dayjs": "^1.10.7",
-    "jira-dev-tool": "^1.7.61",
+    "jira-dev-tool": "^1.6.59",
     "qs": "^6.10.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

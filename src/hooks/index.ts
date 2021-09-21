@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 
 // 初始化hook
-export const useMount = (cb: () => void) => {
+export const useMount = (callback: () => void) => {
   useEffect(() => {
-    cb()
+    callback()
+    // TODO: 依赖项里加上callback会造成无限循环, 这个和useCalllback以及useMemo有关系
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 }
 // 防抖hook
