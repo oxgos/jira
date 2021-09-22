@@ -97,3 +97,12 @@ export const useAuth = () => {
 //         }}
 //       </AuthContext.Consumer>
 //     )
+// auth consumer装饰器
+export const authConsumer =
+  (Target: React.ComponentClass) =>
+  (props: { [key in string]: unknown } | undefined) =>
+    (
+      <AuthContext.Consumer>
+        {(auth) => <Target {...auth} {...props} />}
+      </AuthContext.Consumer>
+    )
