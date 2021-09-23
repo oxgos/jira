@@ -86,17 +86,6 @@ export const useAuth = () => {
   return context
 }
 
-// TODO: auth consumer
-// export const authConsumer =
-//   <P extends {}>(Target: React.ComponentClass<P>) =>
-//   (props: P & AuthCtx) =>
-//     (
-//       <AuthContext.Consumer>
-//         {(auth: AuthCtx | undefined) => {
-//           ;<Target {...auth} {...props} />
-//         }}
-//       </AuthContext.Consumer>
-//     )
 // auth consumer装饰器
 export const authConsumer =
   (Target: React.ComponentClass) =>

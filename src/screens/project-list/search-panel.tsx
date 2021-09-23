@@ -10,6 +10,7 @@ const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
         <Input
           type='text'
           placeholder={'项目名'}
+          autoComplete='off'
           value={param.name}
           onChange={(e) => setParam({ ...param, name: e.target.value })}
         />
