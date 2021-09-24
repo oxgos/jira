@@ -2,9 +2,10 @@ import { ListProps } from './interface'
 import { Table } from 'antd'
 import dayjs from 'dayjs'
 
-const List = ({ list, users }: ListProps) => {
+const List = ({ isLoading, list, users }: ListProps) => {
   return (
     <Table
+      loading={isLoading}
       pagination={false}
       columns={[
         {

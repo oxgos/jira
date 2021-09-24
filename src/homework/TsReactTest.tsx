@@ -1,5 +1,5 @@
-import { useMount } from '../hooks'
-import { useArray } from '../hooks/useArray'
+import { useMount } from '../hooks/common'
+import { useArray } from '../hooks/use-array'
 
 const TsReactTest = () => {
   const persons: { name: string; age: number }[] = [

@@ -22,6 +22,7 @@ export interface Project {
   created: number
 }
 export interface ListProps {
+  isLoading: boolean
   users: User[]
   list: Project[]
 }
