@@ -1,5 +1,7 @@
+import { TableProps } from 'antd'
+
 export interface User {
-  id: number
+  id: string
   name: string
   email: string
   title: string
@@ -17,11 +19,10 @@ export interface SearchPanelProps {
 export interface Project {
   id: number
   name: string
-  personId: number
+  personId: string
   organization: string
   created: number
 }
-export interface ListProps {
+export interface ListProps extends TableProps<Project> {
   users: User[]
-  list: Project[]
 }

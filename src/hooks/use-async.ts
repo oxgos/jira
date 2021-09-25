@@ -12,7 +12,7 @@ const defaultInitialState: State<null> = {
   data: null
 }
 
-export const useAsync = <D,>(initialState?: State<D>) => {
+export const useAsync = <D>(initialState?: State<D>) => {
   const [state, setState] = useState<State<D>>({
     ...defaultInitialState,
     ...initialState
@@ -49,17 +49,6 @@ export const useAsync = <D,>(initialState?: State<D>) => {
         setError(error)
         return error
       })
-    // try {
-    //   const data = await promise
-    //   setData(data)
-    // } catch (error) {
-    //   setError(error)
-    // } finally {
-    //   setState({
-    //     ...state,
-    //     stat: 'idle'
-    //   })
-    // }
   }
   return {
     isIdle: state.stat === 'idle',
@@ -72,14 +61,3 @@ export const useAsync = <D,>(initialState?: State<D>) => {
     ...state
   }
 }
-// const statusMap = {
-//   pending: 0,
-//   success: 1,
-//   fail: 2
-// }
-// export const useAsync = () => {
-//   const [status, setStatus] = useState(statusMap['pending'])
-//   return {
-//     status
-//   }
-// }

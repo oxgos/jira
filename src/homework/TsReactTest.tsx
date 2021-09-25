@@ -1,4 +1,4 @@
-import { useMount } from '../hooks'
+import { useMount } from '../hooks/common'
 import { useArray } from '../hooks/useArray'
 
 const TsReactTest = () => {

@@ -2,9 +2,10 @@ import { ListProps } from './interface'
 import { Table } from 'antd'
 import dayjs from 'dayjs'
 
-const List = ({ list, users }: ListProps) => {
+const List = ({ users, ...props }: ListProps) => {
   return (
     <Table
+      {...props}
       pagination={false}
       columns={[
         {
@@ -39,7 +40,6 @@ const List = ({ list, users }: ListProps) => {
           }
         }
       ]}
-      dataSource={list}
       rowKey={(record) => record.id} // 解决: Warning: Each child in a list should have a unique "key" prop
     />
   )
