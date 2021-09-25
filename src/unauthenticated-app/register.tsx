@@ -2,11 +2,11 @@ import { useAuth } from 'context/auth-context'
 import { Form, Input } from 'antd'
 import { LongButton } from './index'
 
-const Register = () => {
+const Register = ({ onError }: { onError: (error: Error) => void }) => {
   const { register } = useAuth()
   // 默认表单提交方式
   const handleSubmit = (values: { username: string; password: string }) => {
-    register(values)
+    register(values).catch(onError)
   }
   return (
     <Form onFinish={handleSubmit}>

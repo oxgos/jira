@@ -35,29 +35,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   // const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user))
   // 函数式编程概念: point free
-  const login = (form: AuthForm) =>
-    auth
-      .login(form)
-      .then(setUser)
-      .catch((e) => {
-        console.log(e)
-      }) // 简写(消参)
+  const login = (form: AuthForm) => auth.login(form).then(setUser)
 
-  const register = (form: AuthForm) =>
-    auth
-      .register(form)
-      .then(setUser)
-      .catch((e) => {
-        console.log(e)
-      })
+  const register = (form: AuthForm) => auth.register(form).then(setUser)
 
-  const logout = () =>
-    auth
-      .logout()
-      .then(() => setUser(null))
-      .catch((e) => {
-        console.log(e)
-      })
+  const logout = () => auth.logout().then(() => setUser(null))
 
   // 解决刷新不会重新跳转登陆页面问题，原因是刷新后user为null
   useMount(() => {
