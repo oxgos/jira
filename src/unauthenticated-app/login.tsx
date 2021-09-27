@@ -1,13 +1,30 @@
 import { useAuth } from 'context/auth-context'
 import { Form, Input } from 'antd'
 import { LongButton } from './index'
+import { useAsync } from 'hooks/use-async'
 
 const Login = ({ onError }: { onError: (error: Error) => void }) => {
   const { login } = useAuth()
+  const { run, isLoading /* error */ } = useAsync(undefined, {
+    throwOnError: true
+  })
   // 默认表单提交方式
-  const handleSubmit = (values: { username: string; password: string }) => {
+  const handleSubmit = async (values: {
+    username: string
+    password: string
+  }) => {
     // 如果要用try...catch捕获，需要用await、async
-    login(values).catch(onError)
+    // run(login(values)).catch(onError)
+    try {
+      await run(login(values))
+    } catch (e) {
+      onError(e as Error)
+    }
+    // await run(login(values))
+    // console.log(error, '我是error') // null,因为setState是异步，异步跟同步混用，只能用try...catch...
+    // if (error) {
+    //   onError(error)
+    // }
   }
   return (
     <Form onFinish={handleSubmit}>
@@ -34,7 +51,7 @@ const Login = ({ onError }: { onError: (error: Error) => void }) => {
         />
       </Form.Item>
       <Form.Item>
-        <LongButton htmlType={'submit'} type='primary'>
+        <LongButton loading={isLoading} htmlType={'submit'} type='primary'>
           登陆
         </LongButton>
       </Form.Item>
