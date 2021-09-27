@@ -12,8 +12,8 @@ export const UnauthenticatedApp = () => {
   const [error, setError] = useState<Error | null>(null)
   return (
     <Container>
-      <Background />
       <Header />
+      <Background />
       <ShadowCard>
         <Title>{isRegister ? '请注册' : '请登陆'}</Title>
         {error ? (
