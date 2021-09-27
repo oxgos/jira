@@ -1,8 +1,10 @@
-import react, { ReactNode, useContext, useState } from 'react'
+import react, { ReactNode, useContext } from 'react'
 import * as auth from 'auth-provider'
 import { User } from 'screens/project-list/interface'
 import { http } from 'common/http'
 import { useMount } from 'hooks/common'
+import { useAsync } from 'hooks/use-async'
+import { FullPageLoading, FullPageErrorFallback } from 'components/lib'
 interface AuthForm {
   username: string
   password: string
@@ -32,7 +34,16 @@ AuthContext.displayName = 'AuthContext'
 
 // 这是一个HOC组件，不是自定义的hook
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
+  const {
+    data: user,
+    setData: setUser,
+    error,
+    run,
+    isLoading,
+    isIdle,
+    isError
+  } = useAsync<User | null>()
+
   // const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user))
   // 函数式编程概念: point free
   const login = (form: AuthForm) => auth.login(form).then(setUser)
@@ -43,8 +54,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // 解决刷新不会重新跳转登陆页面问题，原因是刷新后user为null
   useMount(() => {
-    bootstrapUser().then(setUser)
+    run(bootstrapUser())
   })
+
+  if (isLoading || isIdle) {
+    return <FullPageLoading />
+  }
+
+  if (isError) {
+    return <FullPageErrorFallback error={error} />
+  }
 
   return (
     <AuthContext.Provider
