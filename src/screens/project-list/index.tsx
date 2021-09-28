@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from '@emotion/styled'
 import { Typography } from 'antd'
-import { useDebounce } from 'hooks/common'
+import { useDebounce, useDocumentTitle } from 'hooks/common'
 import { useProject } from 'hooks/project'
 import { useUsers } from 'hooks/user'
 
@@ -9,6 +9,7 @@ import List from './list'
 import SearchPanel from './search-panel'
 
 const ProjectListScreen = () => {
+  useDocumentTitle('项目列表', false)
   const [param, setParam] = useState({
     name: '',
     personId: ''

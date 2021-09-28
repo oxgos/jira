@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState /* useRef */ } from 'react'
 
 // 初始化hook
 export const useMount = (callback: () => void) => {
@@ -17,4 +17,23 @@ export const useDebounce = <V>(value: V, delay?: number): V => {
     return () => clearTimeout(timer)
   }, [value, delay])
   return debounceValue
+}
+
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
+  // const oldTitleRef = useRef(document.title)
+  const oldTitle = document.title
+  useEffect(() => {
+    document.title = title
+  }, [title])
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle
+      }
+    }
+  }, [])
 }
