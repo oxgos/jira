@@ -1,6 +1,8 @@
 import { ListProps } from './interface'
 import { Table } from 'antd'
 import dayjs from 'dayjs'
+// react-router和react-router-dom的关系，类似于react和react-dom/react-native/react-vr的关系
+import { Link } from 'react-router-dom'
 
 const List = ({ users, ...props }: ListProps) => {
   return (
@@ -10,8 +12,10 @@ const List = ({ users, ...props }: ListProps) => {
       columns={[
         {
           title: '项目名称',
-          dataIndex: 'name',
-          sorter: (a, b) => a.name.localeCompare(b.name) // localeCompare可以将中文字符排序
+          sorter: (a, b) => a.name.localeCompare(b.name), // localeCompare可以将中文字符排序
+          render(value, project) {
+            return <Link to={String(project.id)}>{project.name}</Link>
+          }
         },
         {
           title: '部门',

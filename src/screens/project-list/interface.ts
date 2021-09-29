@@ -16,8 +16,9 @@ export interface SearchPanelProps {
   }
   setParam: (param: SearchPanelProps['param']) => void
 }
+// TODO: 把所有id改为number类型
 export interface Project {
-  id: number
+  id: string
   name: string
   personId: string
   organization: string
