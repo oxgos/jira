@@ -1,4 +1,4 @@
-import { useEffect, useState /* useRef */ } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 // 初始化hook
 export const useMount = (callback: () => void) => {
@@ -23,8 +23,9 @@ export const useDocumentTitle = (
   title: string,
   keepOnUnmount: boolean = true
 ) => {
-  // const oldTitleRef = useRef(document.title)
-  const oldTitle = document.title
+  // useRef初始化后，current的值在生命周期里就不会改变了，除非重新赋值给current
+  const oldTitle = useRef(document.title).current
+
   useEffect(() => {
     document.title = title
   }, [title])
@@ -35,5 +36,5 @@ export const useDocumentTitle = (
         document.title = oldTitle
       }
     }
-  }, [])
+  }, [keepOnUnmount, oldTitle])
 }
