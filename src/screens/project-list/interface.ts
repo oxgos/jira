@@ -1,7 +1,7 @@
 import { TableProps } from 'antd'
 
 export interface User {
-  id: string
+  id: number
   name: string
   email: string
   title: string
@@ -10,17 +10,15 @@ export interface User {
 }
 export interface SearchPanelProps {
   users: User[]
-  param: {
-    name: string
-    personId: string
-  }
+  // 因为接收的param，personId有可能是undefined，所以添加Partial可选
+  param: Partial<Pick<Project, 'name' | 'personId'>>
   setParam: (param: SearchPanelProps['param']) => void
 }
-// TODO: 把所有id改为number类型
+
 export interface Project {
-  id: string
+  id: number
   name: string
-  personId: string
+  personId: number
   organization: string
   created: number
 }
