@@ -7,13 +7,52 @@ import { Project } from 'screens/project-list/interface'
 export const useProject = (param?: Partial<Project>) => {
   const client = useHttp()
   const { run, ...result } = useAsync<Project[]>()
-  useEffect(() => {
+  const request = () =>
     run(
       client('projects', {
         data: cleanObject(param || {})
       })
     )
+  useEffect(() => {
+    run(request(), {
+      isKeepALive: true,
+      request
+    })
   }, [param]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return result
+}
+
+export const useProjectEdit = () => {
+  const client = useHttp()
+  const { run, ...result } = useAsync()
+  const mutate = (params: Partial<Project>) => {
+    return run(
+      client(`projects/${params.id}`, {
+        data: params,
+        method: 'PATCH'
+      })
+    )
+  }
+  return {
+    mutate,
+    result
+  }
+}
+
+export const useProjectAdd = () => {
+  const client = useHttp()
+  const { run, ...result } = useAsync()
+  const mutate = (params: Partial<Project>) => {
+    return run(
+      client(`projects/${params.id}`, {
+        data: params,
+        method: 'POST'
+      })
+    )
+  }
+  return {
+    mutate,
+    result
+  }
 }

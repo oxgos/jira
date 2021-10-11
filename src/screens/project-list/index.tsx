@@ -13,7 +13,12 @@ const ProjectListScreen = () => {
 
   const [param, setParam] = useProjectSearchParam()
   // 获取项目数据
-  const { isLoading, data: list, error } = useProject(useDebounce(param, 500))
+  const {
+    isLoading,
+    data: list,
+    retry,
+    error
+  } = useProject(useDebounce(param, 500))
   const { data: users } = useUsers()
 
   return (
@@ -31,6 +36,7 @@ const ProjectListScreen = () => {
         loading={isLoading}
         dataSource={list || []}
         users={users || []}
+        retry={retry}
       ></List>
     </Container>
   )

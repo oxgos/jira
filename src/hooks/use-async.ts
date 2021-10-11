@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface State<D> {
   error: Error | null
@@ -25,6 +25,8 @@ export const useAsync = <D>(
     ...defaultInitialState,
     ...initialState
   })
+  // const [refresh, setRefresh] = useState<Function | undefined>(undefined)
+  const ref = useRef<Function | undefined>()
 
   const setData = (data: D) =>
     setState({
@@ -40,9 +42,25 @@ export const useAsync = <D>(
       error
     })
 
-  const run = (promise: Promise<D>) => {
+  const retry = () => {
+    // if (refresh) {
+    //   run(refresh())
+    // }
+    if (ref.current) {
+      run(ref.current())
+    }
+  }
+
+  const run = (
+    promise: Promise<D>,
+    params?: { request?: () => Promise<D>; isKeepALive: boolean }
+  ) => {
     if (!promise || !promise.then) {
       throw new Error('请传入Promise类型数据')
+    }
+    if (params?.isKeepALive) {
+      // setRefresh(() => params?.request)
+      ref.current = params?.request
     }
     setState({
       ...state,
@@ -69,6 +87,7 @@ export const useAsync = <D>(
     isError: state.stat === 'error',
     isSuccess: state.stat === 'success',
     run,
+    retry,
     setData,
     setError,
     ...state

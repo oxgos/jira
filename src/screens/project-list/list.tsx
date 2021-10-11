@@ -3,13 +3,32 @@ import { Table } from 'antd'
 import dayjs from 'dayjs'
 // react-router和react-router-dom的关系，类似于react和react-dom/react-native/react-vr的关系
 import { Link } from 'react-router-dom'
+import { Pin } from 'components/pin'
+import { useProjectEdit } from 'hooks/project'
 
-const List = ({ users, ...props }: ListProps) => {
+const List = ({ users, retry, ...props }: ListProps) => {
+  const { mutate } = useProjectEdit()
+  // 柯里化: point free风格
+  const pinProject = (id: number) => (pin: boolean) => {
+    mutate({ id, pin }).then(retry)
+  }
   return (
     <Table
       {...props}
       pagination={false}
       columns={[
+        {
+          title: <Pin checked={true} disabled={true} />,
+          dataIndex: 'collect',
+          render(value, project) {
+            return (
+              <Pin
+                checked={project.pin}
+                onCheckedChange={pinProject(project.id)}
+              />
+            )
+          }
+        },
         {
           title: '项目名称',
           sorter: (a, b) => a.name.localeCompare(b.name), // localeCompare可以将中文字符排序
