@@ -7,16 +7,15 @@ import { Project } from 'screens/project-list/interface'
 export const useProject = (param?: Partial<Project>) => {
   const client = useHttp()
   const { run, ...result } = useAsync<Project[]>()
-  const request = () =>
+  const projectRequest = () =>
     run(
       client('projects', {
         data: cleanObject(param || {})
       })
     )
   useEffect(() => {
-    run(request(), {
-      isKeepALive: true,
-      request
+    run(projectRequest(), {
+      request: projectRequest
     })
   }, [param]) // eslint-disable-line react-hooks/exhaustive-deps
 

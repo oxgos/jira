@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 interface State<D> {
   error: Error | null
@@ -25,9 +25,17 @@ export const useAsync = <D>(
     ...defaultInitialState,
     ...initialState
   })
-  // const [refresh, setRefresh] = useState<Function | undefined>(undefined)
-  const ref = useRef<Function | undefined>()
-
+  // useState直接传入函数的含义是：惰性初始化：所以，要用useState保存函数，不能直接传入函数
+  // useState: https://codesandbox.io/s/li-yong-usestatebao-cun-han-shu-ob72k
+  // useRef: https://codesandbox.io/s/li-yong-userefbao-cun-han-shu-pktr3
+  const [retry, setRetry] = useState(() => () => {})
+  // 可以用useRef代替实现retry
+  // const ref = useRef()
+  // const retry = () => {
+  //   if (ref.current) {
+  //     run(ref.current())
+  //   }
+  // }
   const setData = (data: D) =>
     setState({
       data,
@@ -42,25 +50,16 @@ export const useAsync = <D>(
       error
     })
 
-  const retry = () => {
-    // if (refresh) {
-    //   run(refresh())
-    // }
-    if (ref.current) {
-      run(ref.current())
-    }
-  }
-
   const run = (
     promise: Promise<D>,
-    params?: { request?: () => Promise<D>; isKeepALive: boolean }
+    runConfig?: { request: () => Promise<D> }
   ) => {
     if (!promise || !promise.then) {
       throw new Error('请传入Promise类型数据')
     }
-    if (params?.isKeepALive) {
-      // setRefresh(() => params?.request)
-      ref.current = params?.request
+    if (runConfig?.request) {
+      setRetry(() => () => run(runConfig.request(), runConfig))
+      // ref.current = runConfig.request
     }
     setState({
       ...state,
