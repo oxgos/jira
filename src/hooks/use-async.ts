@@ -1,3 +1,4 @@
+import { useMountedRef } from './common'
 import { useState } from 'react'
 
 interface State<D> {
@@ -29,6 +30,7 @@ export const useAsync = <D>(
   // useState: https://codesandbox.io/s/li-yong-usestatebao-cun-han-shu-ob72k
   // useRef: https://codesandbox.io/s/li-yong-userefbao-cun-han-shu-pktr3
   const [retry, setRetry] = useState(() => () => {})
+  const mountedRef = useMountedRef()
   // 可以用useRef代替实现retry
   // const ref = useRef()
   // const retry = () => {
@@ -67,12 +69,16 @@ export const useAsync = <D>(
     })
     return promise
       .then((data) => {
-        setData(data)
+        if (mountedRef.current) {
+          setData(data)
+        }
         return data
       })
       .catch((error) => {
         // catch会消化异常，如果不主动抛出，外面是接收不到异常的
-        setError(error)
+        if (mountedRef.current) {
+          setError(error)
+        }
         if (config?.throwOnError) {
           return Promise.reject(error)
         } else {
