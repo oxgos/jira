@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useHttp } from 'common/http'
 import { useAsync } from 'hooks/use-async'
 import { cleanObject } from 'common/util'
@@ -7,17 +7,20 @@ import { Project } from 'screens/project-list/interface'
 export const useProject = (param?: Partial<Project>) => {
   const client = useHttp()
   const { run, ...result } = useAsync<Project[]>()
-  const projectRequest = () =>
-    run(
-      client('projects', {
-        data: cleanObject(param || {})
-      })
-    )
+  const fetchProject = useCallback(
+    () =>
+      run(
+        client('projects', {
+          data: cleanObject(param || {})
+        })
+      ),
+    [client, param, run]
+  )
   useEffect(() => {
-    run(projectRequest(), {
-      request: projectRequest
+    run(fetchProject(), {
+      request: fetchProject
     })
-  }, [param]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [param, run, fetchProject])
 
   return result
 }
@@ -25,14 +28,17 @@ export const useProject = (param?: Partial<Project>) => {
 export const useProjectEdit = () => {
   const client = useHttp()
   const { run, ...result } = useAsync()
-  const mutate = (params: Partial<Project>) => {
-    return run(
-      client(`projects/${params.id}`, {
-        data: params,
-        method: 'PATCH'
-      })
-    )
-  }
+  const mutate = useCallback(
+    (params: Partial<Project>) => {
+      return run(
+        client(`projects/${params.id}`, {
+          data: params,
+          method: 'PATCH'
+        })
+      )
+    },
+    [client, run]
+  )
   return {
     mutate,
     result
@@ -42,14 +48,17 @@ export const useProjectEdit = () => {
 export const useProjectAdd = () => {
   const client = useHttp()
   const { run, ...result } = useAsync()
-  const mutate = (params: Partial<Project>) => {
-    return run(
-      client(`projects/${params.id}`, {
-        data: params,
-        method: 'POST'
-      })
-    )
-  }
+  const mutate = useCallback(
+    (params: Partial<Project>) => {
+      return run(
+        client(`projects/${params.id}`, {
+          data: params,
+          method: 'POST'
+        })
+      )
+    },
+    [client, run]
+  )
   return {
     mutate,
     result

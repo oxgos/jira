@@ -1,4 +1,4 @@
-import react, { ReactNode, useContext } from 'react'
+import react, { ReactNode, useContext, useCallback } from 'react'
 import * as auth from 'auth-provider'
 import { User } from 'screens/project-list/interface'
 import { http } from 'common/http'
@@ -53,9 +53,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => auth.logout().then(() => setUser(null))
 
   // 解决刷新不会重新跳转登陆页面问题，原因是刷新后user为null
-  useMount(() => {
-    run(bootstrapUser())
-  })
+  useMount(
+    useCallback(() => {
+      run(bootstrapUser())
+    }, [run])
+  )
 
   if (isLoading || isIdle) {
     return <FullPageLoading />

@@ -1,5 +1,5 @@
+import { useState, useCallback } from 'react'
 import { useMountedRef } from './common'
-import { useState } from 'react'
 
 interface State<D> {
   error: Error | null
@@ -38,54 +38,64 @@ export const useAsync = <D>(
   //     run(ref.current())
   //   }
   // }
-  const setData = (data: D) =>
-    setState({
-      data,
-      stat: 'success',
-      error: null
-    })
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        stat: 'success',
+        error: null
+      }),
+    []
+  )
 
-  const setError = (error: Error) =>
-    setState({
-      data: null,
-      stat: 'error',
-      error
-    })
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        data: null,
+        stat: 'error',
+        error
+      }),
+    []
+  )
 
-  const run = (
-    promise: Promise<D>,
-    runConfig?: { request: () => Promise<D> }
-  ) => {
-    if (!promise || !promise.then) {
-      throw new Error('请传入Promise类型数据')
-    }
-    if (runConfig?.request) {
-      setRetry(() => () => run(runConfig.request(), runConfig))
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { request: () => Promise<D> }) => {
+      if (!promise || !promise.then) {
+        throw new Error('请传入Promise类型数据')
+      }
+      setRetry(() => () => {
+        if (runConfig?.request) {
+          run(runConfig.request(), runConfig)
+        }
+      })
       // ref.current = runConfig.request
-    }
-    setState({
-      ...state,
-      stat: 'loading'
-    })
-    return promise
-      .then((data) => {
-        if (mountedRef.current) {
-          setData(data)
-        }
-        return data
-      })
-      .catch((error) => {
-        // catch会消化异常，如果不主动抛出，外面是接收不到异常的
-        if (mountedRef.current) {
-          setError(error)
-        }
-        if (config?.throwOnError) {
-          return Promise.reject(error)
-        } else {
+      // 换成useCallback后，会触发无限循环
+      // setState({
+      //   ...state,
+      //   stat: 'loading'
+      // })
+      setState((prevState) => ({ ...prevState, stat: 'loading' }))
+      return promise
+        .then((data) => {
+          if (mountedRef.current) {
+            setData(data)
+          }
+          return data
+        })
+        .catch((error) => {
+          // catch会消化异常，如果不主动抛出，外面是接收不到异常的
+          if (mountedRef.current) {
+            setError(error)
+          }
+          if (config.throwOnError) return Promise.reject(error)
           return error
-        }
-      })
-  }
+        })
+    },
+    // 这里依赖了state，也会触发无限循环，因为上面有setState,state一改变又重新调用run
+    // 解决: 利用setState(prevState => {}),prevState代表当前state，所以就不需要再依赖state
+    // [config.throwOnError, mountedRef, setData, setError, state]
+    [config.throwOnError, mountedRef, setData, setError]
+  )
   return {
     isIdle: state.stat === 'idle',
     isLoading: state.stat === 'loading',
