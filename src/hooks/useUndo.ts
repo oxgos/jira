@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useReducer } from 'react'
 
 interface UndoState<T> {
   present: T
@@ -6,31 +6,43 @@ interface UndoState<T> {
   future: T[]
 }
 
-export const useUndo = <T>(initialData: T) => {
-  const [state, setState] = useState<UndoState<T>>({
-    present: initialData,
-    past: [],
-    future: []
-  })
+/** 两种写法 */
+// const SET = 'SET'
+// const UNDO = 'UNDO'
+// const REDO = 'REDO'
+// const RESET = 'RESET'
+// interface UndoAction<T> {
+//   type: typeof SET | typeof UNDO | typeof REDO | typeof RESET
+//   newPresent?: T
+// }
+enum ACTION_TYPE {
+  SET = 'SET',
+  UNDO = 'UNDO',
+  REDO = 'REDO',
+  RESET = 'RESET'
+}
+type UndoAction<T> = {
+  type: ACTION_TYPE
+  newPresent?: T
+}
 
-  const canUndo = state.past.length !== 0
-  const canRedo = state.future.length !== 0
+// reducer的工作机制: 从前一个state,推断出下一个state
+const undoReducer = <T>(currentState: UndoState<T>, action: UndoAction<T>) => {
+  const { type, newPresent } = action
+  const { present, past, future } = currentState
 
-  const set = useCallback((newPresent: T) => {
-    setState((currentState) => {
-      const { present, past } = currentState
+  switch (type) {
+    case ACTION_TYPE.SET: {
       if (present === newPresent) return currentState
+
       return {
         present: newPresent,
         past: [...past, present],
         future: []
       }
-    })
-  }, [])
+    }
 
-  const undo = useCallback(() => {
-    setState((currentState) => {
-      const { present, past, future } = currentState
+    case ACTION_TYPE.UNDO: {
       if (past.length === 0) return currentState
 
       const previous = past[past.length - 1]
@@ -40,12 +52,9 @@ export const useUndo = <T>(initialData: T) => {
         past: newPast,
         future: [present, ...future]
       }
-    })
-  }, [])
+    }
 
-  const redo = useCallback(() => {
-    setState((currentState) => {
-      const { present, past, future } = currentState
+    case ACTION_TYPE.REDO: {
       if (future.length === 0) return currentState
 
       const next = future[0]
@@ -55,16 +64,64 @@ export const useUndo = <T>(initialData: T) => {
         past: [...past, present],
         future: newFuture
       }
-    })
-  }, [])
+    }
 
-  const reset = useCallback((newPresent: T) => {
-    setState(() => ({
-      present: newPresent,
-      past: [],
-      future: []
-    }))
-  }, [])
+    case ACTION_TYPE.RESET: {
+      return {
+        present: newPresent,
+        past: [],
+        future: []
+      }
+    }
+
+    default:
+      return currentState
+  }
+}
+
+export const useUndo = <T>(initialData: T) => {
+  const [state, dispatch] = useReducer(undoReducer, {
+    present: initialData,
+    past: [],
+    future: []
+  } as UndoState<T>)
+
+  const canUndo = state.past.length !== 0
+  const canRedo = state.future.length !== 0
+
+  const set = useCallback(
+    (newPresent: T) =>
+      dispatch({
+        type: ACTION_TYPE.SET,
+        newPresent
+      }),
+    []
+  )
+
+  const undo = useCallback(
+    () =>
+      dispatch({
+        type: ACTION_TYPE.UNDO
+      }),
+    []
+  )
+
+  const redo = useCallback(
+    () =>
+      dispatch({
+        type: ACTION_TYPE.REDO
+      }),
+    []
+  )
+
+  const reset = useCallback(
+    (newPresent: T) =>
+      dispatch({
+        type: ACTION_TYPE.RESET,
+        newPresent
+      }),
+    []
+  )
 
   return [
     state,
