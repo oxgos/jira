@@ -1,12 +1,13 @@
 import { ListProps } from './interface'
-import { Table } from 'antd'
+import { Dropdown, Table, Menu } from 'antd'
 import dayjs from 'dayjs'
 // react-router和react-router-dom的关系，类似于react和react-dom/react-native/react-vr的关系
 import { Link } from 'react-router-dom'
 import { Pin } from 'components/pin'
 import { useProjectEdit } from 'hooks/project'
+import { ButtonNoPadding } from 'components/lib'
 
-const List = ({ users, retry, ...props }: ListProps) => {
+const List = ({ users, retry, setProjectModalOpen, ...props }: ListProps) => {
   const { mutate } = useProjectEdit()
   // 柯里化: point free风格
   const pinProject = (id: number) => (pin: boolean) => {
@@ -59,6 +60,28 @@ const List = ({ users, retry, ...props }: ListProps) => {
                   ? dayjs(project.created).format('YYYY-MM-DD')
                   : '无'}
               </span>
+            )
+          }
+        },
+        {
+          render(value, project) {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item key={'edit'}>
+                      <ButtonNoPadding
+                        type={'link'}
+                        onClick={() => setProjectModalOpen(true)}
+                      >
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <ButtonNoPadding type={'link'}>...</ButtonNoPadding>
+              </Dropdown>
             )
           }
         }

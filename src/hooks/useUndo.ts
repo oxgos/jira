@@ -135,3 +135,21 @@ export const useUndo = <T>(initialData: T) => {
     }
   ] as const
 }
+
+// 约束类的属性类型
+interface ClockInterface {
+  currentTime: Date
+  setTime(d: Date): void
+}
+
+class Clock implements ClockInterface {
+  currentTime: Date // 报错，属性“currentTime”没有初始化表达式，且未在构造函数中明确赋值
+
+  constructor(h: number, m: number) {
+    this.currentTime = new Date() // 必须赋值，才不会报上面的错
+  }
+
+  setTime(d: Date) {
+    this.currentTime = d
+  }
+}
