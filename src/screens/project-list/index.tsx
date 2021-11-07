@@ -1,15 +1,19 @@
 import styled from '@emotion/styled'
-import { Button, Typography } from 'antd'
-import { Row } from 'components/lib'
+import { Typography } from 'antd'
+import { ButtonNoPadding, Row } from 'components/lib'
 import { useDebounce, useDocumentTitle } from 'hooks/common'
 import { useProject } from 'hooks/project'
 import { useUsers } from 'hooks/user'
+import { useDispatch } from 'react-redux'
 
 import List from './list'
+import { projectListActions } from './project-list.slice'
 import SearchPanel from './search-panel'
 import { useProjectSearchParam } from './util'
 
-const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
+const ProjectListScreen = () => {
+  const dispatch = useDispatch()
+
   useDocumentTitle('项目列表', false)
 
   const [param, setParam] = useProjectSearchParam()
@@ -26,7 +30,12 @@ const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        {props.projectButton}
+        <ButtonNoPadding
+          onClick={() => dispatch(projectListActions.openProjectModal())}
+          type={'link'}
+        >
+          创建项目
+        </ButtonNoPadding>
       </Row>
       <SearchPanel
         users={users || []}
@@ -41,7 +50,6 @@ const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
         dataSource={list || []}
         users={users || []}
         retry={retry}
-        projectButton={props.projectButton}
       ></List>
     </Container>
   )

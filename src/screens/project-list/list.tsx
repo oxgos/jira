@@ -6,8 +6,11 @@ import { Link } from 'react-router-dom'
 import { Pin } from 'components/pin'
 import { useProjectEdit } from 'hooks/project'
 import { ButtonNoPadding } from 'components/lib'
+import { useDispatch } from 'react-redux'
+import { projectListActions } from './project-list.slice'
 
-const List = ({ users, retry, projectButton, ...props }: ListProps) => {
+const List = ({ users, retry, ...props }: ListProps) => {
+  const dispatch = useDispatch()
   const { mutate } = useProjectEdit()
   // 柯里化: point free风格
   const pinProject = (id: number) => (pin: boolean) => {
@@ -69,7 +72,16 @@ const List = ({ users, retry, projectButton, ...props }: ListProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={'edit'}>{projectButton}</Menu.Item>
+                    <Menu.Item key={'edit'}>
+                      <ButtonNoPadding
+                        type={'link'}
+                        onClick={() =>
+                          dispatch(projectListActions.openProjectModal())
+                        }
+                      >
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
                   </Menu>
                 }
               >
