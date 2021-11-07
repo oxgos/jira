@@ -1,24 +1,20 @@
-import react, { ReactNode, useContext, useCallback } from 'react'
+import { ReactNode, useCallback } from 'react'
 import * as auth from 'auth-provider'
 import { User } from 'screens/project-list/interface'
 import { http } from 'common/http'
 import { useMount } from 'hooks/common'
 import { useAsync } from 'hooks/use-async'
 import { FullPageLoading, FullPageErrorFallback } from 'components/lib'
-interface AuthForm {
+import * as authStore from 'store/auth.slice'
+import { useDispatch, useSelector } from 'react-redux'
+
+export interface AuthForm {
   username: string
   password: string
 }
 
-interface AuthCtx {
-  user: User | null
-  login: (from: AuthForm) => Promise<void>
-  register: (from: AuthForm) => Promise<void>
-  logout: () => Promise<void>
-}
-
 // 初始化用户信息
-const bootstrapUser = async () => {
+export const bootstrapUser = async () => {
   let user = null
   const token = auth.getToken()
   if (token) {
@@ -28,35 +24,17 @@ const bootstrapUser = async () => {
   return user
 }
 
-// createContext的泛型类型: 根据Provider所提供的value
-const AuthContext = react.createContext<AuthCtx | undefined>(undefined)
-AuthContext.displayName = 'AuthContext'
-
 // 这是一个HOC组件，不是自定义的hook
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const {
-    data: user,
-    setData: setUser,
-    error,
-    run,
-    isLoading,
-    isIdle,
-    isError
-  } = useAsync<User | null>()
+  const { error, run, isLoading, isIdle, isError } = useAsync<User | null>()
 
-  // const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user))
-  // 函数式编程概念: point free
-  const login = (form: AuthForm) => auth.login(form).then(setUser)
-
-  const register = (form: AuthForm) => auth.register(form).then(setUser)
-
-  const logout = () => auth.logout().then(() => setUser(null))
+  const dispatch: (...args: unknown[]) => Promise<User> = useDispatch()
 
   // 解决刷新不会重新跳转登陆页面问题，原因是刷新后user为null
   useMount(
     useCallback(() => {
-      run(bootstrapUser())
-    }, [run])
+      run(dispatch(authStore.bootstrap()))
+    }, [run, dispatch])
   )
 
   if (isLoading || isIdle) {
@@ -66,35 +44,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   if (isError) {
     return <FullPageErrorFallback error={error} />
   }
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        register,
-        logout
-      }}
-      children={children}
-    />
-  )
+  // 组件不能返回null,所以用div包一下
+  return <div>{children}</div>
 }
 
 // auth hook
 export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth必须在AuthProvider中使用')
+  /**
+   * 如不给dispatch显示声明，then会报错
+   * login({ username: '123', password: '123'}).then()
+   */
+  const dispatch: (...args: unknown[]) => Promise<User> = useDispatch()
+  const user = useSelector(authStore.selectUser)
+  const login = useCallback(
+    (form: AuthForm) => dispatch(authStore.login(form)),
+    [dispatch]
+  )
+  const register = useCallback(
+    (form: AuthForm) => dispatch(authStore.register(form)),
+    [dispatch]
+  )
+  const logout = useCallback(() => dispatch(authStore.logout()), [dispatch])
+  return {
+    user,
+    login,
+    register,
+    logout
   }
-  return context
 }
-
-// auth consumer装饰器
-export const authConsumer =
-  (Target: React.ComponentClass) =>
-  (props: { [key in string]: unknown } | undefined) =>
-    (
-      <AuthContext.Consumer>
-        {(auth) => <Target {...auth} {...props} />}
-      </AuthContext.Consumer>
-    )
