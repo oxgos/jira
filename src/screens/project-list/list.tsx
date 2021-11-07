@@ -7,7 +7,7 @@ import { Pin } from 'components/pin'
 import { useProjectEdit } from 'hooks/project'
 import { ButtonNoPadding } from 'components/lib'
 
-const List = ({ users, retry, setProjectModalOpen, ...props }: ListProps) => {
+const List = ({ users, retry, projectButton, ...props }: ListProps) => {
   const { mutate } = useProjectEdit()
   // 柯里化: point free风格
   const pinProject = (id: number) => (pin: boolean) => {
@@ -69,14 +69,7 @@ const List = ({ users, retry, setProjectModalOpen, ...props }: ListProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={'edit'}>
-                      <ButtonNoPadding
-                        type={'link'}
-                        onClick={() => setProjectModalOpen(true)}
-                      >
-                        编辑
-                      </ButtonNoPadding>
-                    </Menu.Item>
+                    <Menu.Item key={'edit'}>{projectButton}</Menu.Item>
                   </Menu>
                 }
               >

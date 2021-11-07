@@ -9,9 +9,7 @@ import List from './list'
 import SearchPanel from './search-panel'
 import { useProjectSearchParam } from './util'
 
-const ProjectListScreen = (props: {
-  setProjectModalOpen: (isOpen: boolean) => void
-}) => {
+const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
   useDocumentTitle('项目列表', false)
 
   const [param, setParam] = useProjectSearchParam()
@@ -28,9 +26,7 @@ const ProjectListScreen = (props: {
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        <Button onClick={() => props.setProjectModalOpen(true)}>
-          创建项目
-        </Button>
+        {props.projectButton}
       </Row>
       <SearchPanel
         users={users || []}
@@ -45,7 +41,7 @@ const ProjectListScreen = (props: {
         dataSource={list || []}
         users={users || []}
         retry={retry}
-        setProjectModalOpen={props.setProjectModalOpen}
+        projectButton={props.projectButton}
       ></List>
     </Container>
   )
