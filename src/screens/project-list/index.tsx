@@ -7,11 +7,11 @@ import { useUsers } from 'hooks/user'
 
 import List from './list'
 import SearchPanel from './search-panel'
-import { useProjectSearchParam } from './util'
+import { useProjectModal, useProjectSearchParam } from './util'
 
-const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
+const ProjectListScreen = () => {
   useDocumentTitle('项目列表', false)
-
+  const { open } = useProjectModal()
   const [param, setParam] = useProjectSearchParam()
   // 获取项目数据
   const {
@@ -26,7 +26,7 @@ const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
     <Container>
       <Row between={true}>
         <h1>项目列表</h1>
-        {props.projectButton}
+        <Button onClick={open}>创建项目</Button>
       </Row>
       <SearchPanel
         users={users || []}
@@ -41,7 +41,6 @@ const ProjectListScreen = (props: { projectButton: JSX.Element }) => {
         dataSource={list || []}
         users={users || []}
         retry={retry}
-        projectButton={props.projectButton}
       ></List>
     </Container>
   )

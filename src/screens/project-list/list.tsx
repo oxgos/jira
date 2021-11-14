@@ -6,13 +6,15 @@ import { Link } from 'react-router-dom'
 import { Pin } from 'components/pin'
 import { useProjectEdit } from 'hooks/project'
 import { ButtonNoPadding } from 'components/lib'
+import { useProjectModal } from './util'
 
-const List = ({ users, retry, projectButton, ...props }: ListProps) => {
+const List = ({ users, retry, ...props }: ListProps) => {
   const { mutate } = useProjectEdit()
   // 柯里化: point free风格
   const pinProject = (id: number) => (pin: boolean) => {
     mutate({ id, pin }).then(retry)
   }
+  const { open } = useProjectModal()
   return (
     <Table
       {...props}
@@ -69,7 +71,11 @@ const List = ({ users, retry, projectButton, ...props }: ListProps) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={'edit'}>{projectButton}</Menu.Item>
+                    <Menu.Item key={'edit'}>
+                      <ButtonNoPadding onClick={open} type={'link'}>
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
                   </Menu>
                 }
               >

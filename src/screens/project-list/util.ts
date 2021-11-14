@@ -19,3 +19,19 @@ export const useProjectSearchParam = () => {
     setParam
   ] as const
 }
+
+export const useProjectModal = () => {
+  const [{ projectCreate }, setProjectModalOpen] = useUrlQueryParam([
+    'projectCreate'
+  ])
+
+  const open = () => setProjectModalOpen({ projectCreate: true })
+
+  const close = () => setProjectModalOpen({ projectCreate: undefined })
+
+  return {
+    projectModalOpen: projectCreate === 'true', // query的值是字符串
+    open,
+    close
+  }
+}
