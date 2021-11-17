@@ -7,8 +7,8 @@ type SelectProps = React.ComponentProps<typeof Select>
 // 利用Omit去除SelectProps的value,onChange,options属性，以免冲突
 interface IdSelectProps
   extends Omit<SelectProps, 'value' | 'onChange' | 'options'> {
-  value: Raw | null | undefined
-  onChange: (value?: number) => void
+  value?: Raw | null | undefined
+  onChange?: (value?: number) => void
   defaultOptionName?: string
   options?: { id: number; name: string }[]
 }
@@ -27,7 +27,7 @@ export const IdSelect = (props: IdSelectProps) => {
     <Select
       {...restProps}
       value={options?.length ? toNumber(value) : 0} // 解决: 一开始显示为数字再变为中文的问题
-      onChange={(value) => onChange(toNumber(value) || undefined)}
+      onChange={(value) => onChange?.(toNumber(value) || undefined)}
     >
       {defaultOptionName ? (
         <Select.Option value={0}>{defaultOptionName}</Select.Option>

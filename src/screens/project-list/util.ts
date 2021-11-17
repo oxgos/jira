@@ -1,3 +1,4 @@
+import { useProject } from 'hooks/project'
 import { useState, useMemo } from 'react'
 import { useUrlQueryParam } from 'hooks/url'
 
@@ -21,17 +22,30 @@ export const useProjectSearchParam = () => {
 }
 
 export const useProjectModal = () => {
-  const [{ projectCreate }, setProjectModalOpen] = useUrlQueryParam([
-    'projectCreate'
-  ])
+  const [{ projectCreate, editingProjectId }, setProjectModalOpen] =
+    useUrlQueryParam(['projectCreate', 'editingProjectId'])
+
+  const { data: editingProject, isLoading } = useProject(
+    Number(editingProjectId)
+  )
 
   const open = () => setProjectModalOpen({ projectCreate: true })
 
-  const close = () => setProjectModalOpen({ projectCreate: undefined })
+  const close = () =>
+    setProjectModalOpen({
+      projectCreate: undefined,
+      editingProjectId: undefined
+    })
+
+  const startEdit = (id: number) =>
+    setProjectModalOpen({ editingProjectId: id })
 
   return {
-    projectModalOpen: projectCreate === 'true', // query的值是字符串
+    projectModalOpen: projectCreate === 'true' || Boolean(editingProject), // query的值是字符串
     open,
-    close
+    close,
+    startEdit,
+    editingProject,
+    isLoading
   }
 }

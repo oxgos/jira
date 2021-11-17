@@ -4,17 +4,19 @@ import dayjs from 'dayjs'
 // react-router和react-router-dom的关系，类似于react和react-dom/react-native/react-vr的关系
 import { Link } from 'react-router-dom'
 import { Pin } from 'components/pin'
-import { useProjectEdit } from 'hooks/project'
+import { useEditProject } from 'hooks/project'
 import { ButtonNoPadding } from 'components/lib'
 import { useProjectModal } from './util'
 
-const List = ({ users, retry, ...props }: ListProps) => {
-  const { mutate } = useProjectEdit()
+const List = ({ users, ...props }: ListProps) => {
+  const { mutate } = useEditProject()
+  const { startEdit } = useProjectModal()
   // 柯里化: point free风格
   const pinProject = (id: number) => (pin: boolean) => {
-    mutate({ id, pin }).then(retry)
+    mutate({ id, pin })
   }
-  const { open } = useProjectModal()
+  const editProject = (id: number) => () => startEdit(id)
+
   return (
     <Table
       {...props}
@@ -72,7 +74,10 @@ const List = ({ users, retry, ...props }: ListProps) => {
                 overlay={
                   <Menu>
                     <Menu.Item key={'edit'}>
-                      <ButtonNoPadding onClick={open} type={'link'}>
+                      <ButtonNoPadding
+                        onClick={editProject(project.id)}
+                        type={'link'}
+                      >
                         编辑
                       </ButtonNoPadding>
                     </Menu.Item>

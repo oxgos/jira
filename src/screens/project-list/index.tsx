@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import { Button, Typography } from 'antd'
-import { Row } from 'components/lib'
+import { Button } from 'antd'
+import { ErrorBox, Row } from 'components/lib'
 import { useDebounce, useDocumentTitle } from 'hooks/common'
-import { useProject } from 'hooks/project'
+import { useProjects } from 'hooks/project'
 import { useUsers } from 'hooks/user'
 
 import List from './list'
@@ -14,12 +14,7 @@ const ProjectListScreen = () => {
   const { open } = useProjectModal()
   const [param, setParam] = useProjectSearchParam()
   // 获取项目数据
-  const {
-    isLoading,
-    data: list,
-    retry,
-    error
-  } = useProject(useDebounce(param, 500))
+  const { isLoading, data: list, error } = useProjects(useDebounce(param, 500))
   const { data: users } = useUsers()
 
   return (
@@ -33,14 +28,11 @@ const ProjectListScreen = () => {
         param={param}
         setParam={setParam}
       ></SearchPanel>
-      {error ? (
-        <Typography.Text type={'danger'}>{error.message}</Typography.Text>
-      ) : null}
+      <ErrorBox error={error} />
       <List
         loading={isLoading}
         dataSource={list || []}
         users={users || []}
-        retry={retry}
       ></List>
     </Container>
   )

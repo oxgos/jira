@@ -25,5 +25,4 @@ export interface Project {
 }
 export interface ListProps extends TableProps<Project> {
   users: User[]
-  retry: () => void
 }
