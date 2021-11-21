@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react'
 import { useUrlQueryParam } from 'hooks/url'
 
 // 项目列表搜索参数
-export const useProjectSearchParam = () => {
+export const useProjectSearchParams = () => {
   const [keys] = useState<('name' | 'personId')[]>(['name', 'personId'])
   // 基本类型，可以放到依赖里: 组件状态，可以放到依赖里；非组件状态的对象，绝不可以放到依赖里
   // https://codesandbox.io/s/keen-wave-tlz9s?file=/src/App.js

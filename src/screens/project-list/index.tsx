@@ -7,12 +7,12 @@ import { useUsers } from 'hooks/user'
 
 import List from './list'
 import SearchPanel from './search-panel'
-import { useProjectModal, useProjectSearchParam } from './util'
+import { useProjectModal, useProjectSearchParams } from './util'
 
 const ProjectListScreen = () => {
   useDocumentTitle('项目列表', false)
   const { open } = useProjectModal()
-  const [param, setParam] = useProjectSearchParam()
+  const [param, setParam] = useProjectSearchParams()
   // 获取项目数据
   const { isLoading, data: list, error } = useProjects(useDebounce(param, 500))
   const { data: users } = useUsers()
