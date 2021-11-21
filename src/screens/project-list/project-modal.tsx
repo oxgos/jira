@@ -5,7 +5,7 @@ import { ErrorBox } from 'components/lib'
 import { UserSelect } from 'components/user-select'
 import { useAddProject, useEditProject } from 'hooks/project'
 import { useEffect } from 'react'
-import { useProjectModal } from './util'
+import { useProjectModal, useProjectsQueryKey } from './util'
 
 export const ProjectModal = () => {
   const { projectModalOpen, close, editingProject, isLoading } =
@@ -14,7 +14,11 @@ export const ProjectModal = () => {
   const useMutateProject = editingProject ? useEditProject : useAddProject
 
   // mutateAsync是异步，mutate是同步
-  const { mutateAsync, error, isLoading: mutateLoading } = useMutateProject()
+  const {
+    mutateAsync,
+    error,
+    isLoading: mutateLoading
+  } = useMutateProject(useProjectsQueryKey())
   const [form] = useForm()
   const onFinish = (values: any) => {
     mutateAsync({ ...editingProject, ...values }).then(() => {
