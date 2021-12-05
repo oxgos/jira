@@ -26,17 +26,21 @@ export const ProjectModal = () => {
       close()
     })
   }
+  const closeModal = () => {
+    form.resetFields()
+    close()
+  }
 
   const title = editingProject ? '编辑项目' : '创建项目'
 
   useEffect(() => {
     form.setFieldsValue(editingProject)
   }, [editingProject, form])
-  console.log('projectModalOpen : ', projectModalOpen)
+
   return (
     <Drawer
       forceRender={true} // 如果不强制render,useForm就找不到Form元素，就会报错
-      onClose={close}
+      onClose={closeModal}
       visible={projectModalOpen}
       width={'100%'}
     >

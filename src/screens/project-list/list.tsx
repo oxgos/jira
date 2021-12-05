@@ -71,7 +71,7 @@ const List = ({ users, ...props }: ListProps) => {
           }
         }
       ]}
-      rowKey={(record) => record.id} // 解决: Warning: Each child in a list should have a unique "key" prop
+      rowKey={(record) => String(record.id)} // 解决: Warning: Each child in a list should have a unique "key" prop
     />
   )
 }

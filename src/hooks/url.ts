@@ -1,5 +1,6 @@
+import { subset } from './common'
 import { URLSearchParamsInit, useSearchParams } from 'react-router-dom'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { cleanObject } from 'common/util'
 /**
  * 返回页面url中，指定键的参数值
@@ -13,18 +14,13 @@ import { cleanObject } from 'common/util'
  * const [keys] = useState<('name'|'personId')[]>(['name', 'personId'])
  */
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
-  const [searchParam, setSearchParam] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [stateKeys] = useState(keys)
   return [
     // 这里不用useMemo，会导致死循环，原因: 每次返回新对象(虽然值一样，但指向不同)，导致重新render
     useMemo(
-      () =>
-        keys.reduce((prev, key) => {
-          return {
-            ...prev,
-            [key]: searchParam.get(key) || ''
-          }
-        }, {} as { [key in K]: string }),
-      [keys, searchParam]
+      () => subset(Object.fromEntries(searchParams), stateKeys),
+      [stateKeys, searchParams]
     ),
     // 多封装一层，更好的限制传进的参数
     (params: Partial<{ [key in K]: unknown }>) => {
@@ -35,10 +31,10 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       // u[Symbol.iterator] 看是否是一个方法
       // Object.fromEntries把iterator转化成键值对的对象
       const o = cleanObject({
-        ...Object.fromEntries(searchParam),
+        ...Object.fromEntries(searchParams),
         ...params
       }) as URLSearchParamsInit
-      return setSearchParam(o)
+      return setSearchParams(o)
     }
   ] as const
 }

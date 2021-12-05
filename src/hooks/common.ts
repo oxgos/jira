@@ -56,6 +56,7 @@ export const useMountedRef = () => {
 // 重置路由于
 export const resetRoute = () => (window.location.href = window.location.origin)
 
+// 指定对象里的数个key，组成一个新的对象，例如：obj: {a:1, b:1}, keys: [a] => newObj: {a: 1}
 export const subset = <
   O extends { [key in string]: unknown },
   K extends keyof O
@@ -63,8 +64,10 @@ export const subset = <
   obj: O,
   keys: K[]
 ) => {
+  // Object.entries将对象转换成二维数组
   const filteredEntries = Object.entries(obj).filter(([key]) =>
     keys.includes(key as K)
   )
+  // Object.fromEntries将二维数组转换成对象
   return Object.fromEntries(filteredEntries) as Pick<O, K>
 }

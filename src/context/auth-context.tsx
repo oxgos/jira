@@ -5,6 +5,7 @@ import { http } from 'common/http'
 import { useMount } from 'hooks/common'
 import { useAsync } from 'hooks/use-async'
 import { FullPageLoading, FullPageErrorFallback } from 'components/lib'
+import { useQueryClient } from 'react-query'
 interface AuthForm {
   username: string
   password: string
@@ -43,6 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isIdle,
     isError
   } = useAsync<User | null>()
+  const queryClient = useQueryClient()
 
   // const login = (form: AuthForm) => auth.login(form).then((user) => setUser(user))
   // 函数式编程概念: point free
@@ -50,7 +52,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = (form: AuthForm) => auth.register(form).then(setUser)
 
-  const logout = () => auth.logout().then(() => setUser(null))
+  const logout = () =>
+    auth.logout().then(() => {
+      queryClient.clear()
+      setUser(null)
+    })
 
   // 解决刷新不会重新跳转登陆页面问题，原因是刷新后user为null
   useMount(

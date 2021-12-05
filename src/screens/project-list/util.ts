@@ -46,7 +46,7 @@ export const useProjectModal = () => {
     setProjectModalOpen({ editingProjectId: id })
 
   return {
-    projectModalOpen: projectCreate === 'true' || Boolean(editingProject), // query的值是字符串
+    projectModalOpen: projectCreate === 'true' || Boolean(editingProjectId), // query的值是字符串
     open,
     close,
     startEdit,
