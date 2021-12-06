@@ -1,13 +1,7 @@
 import { TableProps } from 'antd'
+import { Project } from '../../types/project'
+import { User } from '../../types/user'
 
-export interface User {
-  id: number
-  name: string
-  email: string
-  title: string
-  organization: string
-  token: string
-}
 export interface SearchPanelProps {
   users: User[]
   // 因为接收的param，personId有可能是undefined，所以添加Partial可选
@@ -15,14 +9,6 @@ export interface SearchPanelProps {
   setParam: (param: SearchPanelProps['param']) => void
 }
 
-export interface Project {
-  id: number
-  name: string
-  personId: number
-  pin: boolean
-  organization: string
-  created: number
-}
 export interface ListProps extends TableProps<Project> {
   users: User[]
 }

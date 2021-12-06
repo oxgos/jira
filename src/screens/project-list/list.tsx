@@ -1,4 +1,5 @@
-import { ListProps, Project } from './interface'
+import { ListProps } from './interface'
+import { Project } from '../../types/project'
 import { Dropdown, Table, Menu, Modal } from 'antd'
 import dayjs from 'dayjs'
 // react-router和react-router-dom的关系，类似于react和react-dom/react-native/react-vr的关系

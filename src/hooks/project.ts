@@ -4,7 +4,7 @@ import {
   useEditConfig
 } from './use-optimistic-options'
 import { useHttp } from 'common/http'
-import { Project } from 'screens/project-list/interface'
+import { Project } from 'types/project'
 import { QueryKey, useMutation, useQuery } from 'react-query'
 
 // 获取列表

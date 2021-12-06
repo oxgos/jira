@@ -1,5 +1,5 @@
 import { http } from 'common/http'
-import { User } from 'screens/project-list/interface'
+import { User } from 'types/user'
 
 const localStorageKey = '__auth_provider_token__'
 

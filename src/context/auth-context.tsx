@@ -1,6 +1,6 @@
 import react, { ReactNode, useContext, useCallback } from 'react'
 import * as auth from 'auth-provider'
-import { User } from 'screens/project-list/interface'
+import { User } from 'types/user'
 import { http } from 'common/http'
 import { useMount } from 'hooks/common'
 import { useAsync } from 'hooks/use-async'

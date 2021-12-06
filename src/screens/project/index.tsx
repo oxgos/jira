@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
-import { EpicScreen } from './epic'
-import { KanbanScreen } from './kanban'
+import { EpicScreen } from '../epic/epic'
+import { KanbanScreen } from '../kanban/kanban'
 
 const ProjectScreen = () => {
   return (
@@ -13,7 +13,8 @@ const ProjectScreen = () => {
       <Routes>
         <Route path={'/kanban'} element={<KanbanScreen />} />
         <Route path={'/epic'} element={<EpicScreen />} />
-        <Navigate to={window.location.pathname + '/kanban'} />
+        {/* replace=true 解决返回不了问题，NOTE: 不再是push进栈，而是replace了原先跳转的路径 */}
+        <Navigate to={window.location.pathname + '/kanban'} replace={true} />
       </Routes>
     </div>
   )
