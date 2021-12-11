@@ -1,6 +1,5 @@
-import styled from '@emotion/styled'
 import { Button } from 'antd'
-import { ErrorBox, Row } from 'components/lib'
+import { ErrorBox, Row, ScreenContainer } from 'components/lib'
 import { useDebounce, useDocumentTitle } from 'hooks/common'
 import { useProjects } from 'hooks/project'
 import { useUsers } from 'hooks/user'
@@ -18,7 +17,7 @@ const ProjectListScreen = () => {
   const { data: users } = useUsers()
 
   return (
-    <Container>
+    <ScreenContainer>
       <Row between={true}>
         <h1>项目列表</h1>
         <Button onClick={open}>创建项目</Button>
@@ -34,14 +33,10 @@ const ProjectListScreen = () => {
         dataSource={list || []}
         users={users || []}
       ></List>
-    </Container>
+    </ScreenContainer>
   )
 }
 
 ProjectListScreen.whyDidYouRender = false
-
-const Container = styled.div`
-  padding: 3.2rem;
-`
 
 export default ProjectListScreen

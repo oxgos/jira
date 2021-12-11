@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { ScreenContainer } from 'components/lib'
 import { useDocumentTitle } from 'hooks/common'
 import { useKanbans } from 'hooks/kanban'
 import { KanbanColumn } from './kanban.column'
@@ -11,7 +12,7 @@ export const KanbanScreen = () => {
   const { data: currentProject } = useProjectInUrl()
   const { data: kanbans } = useKanbans(useKanbanSearchParams())
   return (
-    <div>
+    <ScreenContainer>
       <h1>{currentProject?.name}看板</h1>
       <SearchPanel />
       {/* NOTE: 记录在笔记: KanbanColumn遍历渲染了3次,useTask只请求了一次，因为react-query的请求缓存优化, 默认2秒以内重复请求归并为一次 */}
@@ -20,12 +21,12 @@ export const KanbanScreen = () => {
           <KanbanColumn kanban={kanban} key={kanban.id} />
         ))}
       </ColumnContainer>
-    </div>
+    </ScreenContainer>
   )
 }
 
 const ColumnContainer = styled.div`
   display: flex;
-  overflow: hidden;
-  margin-right: 2rem;
+  overflow-x: scroll;
+  flex: 1;
 `
