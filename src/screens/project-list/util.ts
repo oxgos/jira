@@ -1,5 +1,5 @@
 import { useProject } from 'hooks/project'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useUrlQueryParam } from 'hooks/url'
 
 // 项目列表搜索参数
@@ -34,16 +34,24 @@ export const useProjectModal = () => {
     Number(editingProjectId)
   )
 
-  const open = () => setProjectModalOpen({ projectCreate: true })
+  const open = useCallback(
+    () => setProjectModalOpen({ projectCreate: true }),
+    [setProjectModalOpen]
+  )
 
-  const close = () =>
-    setProjectModalOpen({
-      projectCreate: undefined,
-      editingProjectId: undefined
-    })
+  const close = useCallback(
+    () =>
+      setProjectModalOpen({
+        projectCreate: undefined,
+        editingProjectId: undefined
+      }),
+    [setProjectModalOpen]
+  )
 
-  const startEdit = (id: number) =>
-    setProjectModalOpen({ editingProjectId: id })
+  const startEdit = useCallback(
+    (id: number) => setProjectModalOpen({ editingProjectId: id }),
+    [setProjectModalOpen]
+  )
 
   return {
     projectModalOpen: projectCreate === 'true' || Boolean(editingProjectId), // query的值是字符串
