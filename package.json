@@ -23,6 +23,7 @@
     "jira-dev-tool": "1.6.55",
     "qs": "^6.10.1",
     "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
     "react-dom": "^17.0.2",
     "react-query": "^3.33.2",
     "react-router": "^6.0.0-beta.0",
@@ -60,6 +61,7 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
+    "@types/react-beautiful-dnd": "13.1.0",
     "eslint-config-prettier": "^8.3.0",
     "husky": ">=6",
     "json-server": "^0.16.3",
