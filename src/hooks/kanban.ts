@@ -1,7 +1,7 @@
 import { useHttp } from 'common/http'
 import { QueryKey, useMutation, useQuery } from 'react-query'
 import { Kanban } from 'types/kanban'
-import { useAddConfig } from './use-optimistic-options'
+import { useAddConfig, useDeleteConfig } from './use-optimistic-options'
 
 // 获取列表
 export const useKanbans = (param?: Partial<Kanban>) => {
@@ -23,5 +23,17 @@ export const useAddKanban = (queryKey: QueryKey) => {
         method: 'POST'
       }),
     useAddConfig(queryKey)
+  )
+}
+
+// 删除
+export const useDeleteKanban = (queryKey: QueryKey) => {
+  const client = useHttp()
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`kanbans/${id}`, {
+        method: 'DELETE'
+      }),
+    useDeleteConfig(queryKey)
   )
 }

@@ -1,7 +1,11 @@
 import { useHttp } from 'common/http'
 import { QueryKey, useMutation, useQuery } from 'react-query'
 import { Task } from 'types/task'
-import { useAddConfig, useEditConfig } from './use-optimistic-options'
+import {
+  useAddConfig,
+  useDeleteConfig,
+  useEditConfig
+} from './use-optimistic-options'
 
 // 获取列表
 export const useTasks = (param?: Partial<Task>) => {
@@ -46,4 +50,16 @@ export const useTask = (id?: number) => {
     // 如果id不存在，enabled为false,则不请求
     enabled: !!id
   })
+}
+
+// 删除
+export const useDeleteTask = (queryKey: QueryKey) => {
+  const client = useHttp()
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`tasks/${id}`, {
+        method: 'DELETE'
+      }),
+    useDeleteConfig(queryKey)
+  )
 }
