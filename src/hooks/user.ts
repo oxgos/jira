@@ -1,16 +1,12 @@
-import { useEffect } from 'react'
 import { useHttp } from 'common/http'
-import { useAsync } from 'hooks/use-async'
+import { useQuery } from 'react-query'
 import { User } from 'types/user'
-import { cleanObject } from 'common/util'
 
 export const useUsers = (param?: Partial<User>) => {
   const client = useHttp()
-  const { run, ...result } = useAsync<User[]>()
-
-  useEffect(() => {
-    run(client(`users`, { data: cleanObject(param || {}) }))
-  }, [param]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  return result
+  return useQuery<User[]>(['users', param], () =>
+    client('users', {
+      data: param
+    })
+  )
 }
