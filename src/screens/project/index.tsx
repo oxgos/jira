@@ -2,7 +2,7 @@ import { Menu } from 'antd'
 import styled from '@emotion/styled'
 import { Navigate, Route, Routes, useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
-import { EpicScreen } from 'screens/epic/epic'
+import { EpicScreen } from 'screens/epic'
 import { KanbanScreen } from 'screens/kanban'
 
 const useRouteType = () => {
@@ -41,6 +41,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: 16rem 1fr;
   overflow: hidden;
+  width: 100%;
 `
 
 const Aside = styled.aside`
