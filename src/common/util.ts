@@ -7,7 +7,10 @@ export const isFalsy = (value: unknown) => (value === 0 ? false : !value)
 export const isVoid = (value: unknown) =>
   value === undefined || value === null || value === ''
 
-export const cleanObject = (object: cleanObjectArgs) => {
+export const cleanObject = (object?: cleanObjectArgs) => {
+  if (!object) {
+    return {}
+  }
   const copy = { ...object }
   Object.keys(copy).forEach((key: string) => {
     // if (isFalsy(copy[key])) {

@@ -1,3 +1,4 @@
+import { cleanObject } from './../common/util'
 import {
   useAddConfig,
   useDeleteConfig,
@@ -10,7 +11,7 @@ import { QueryKey, useMutation, useQuery } from 'react-query'
 // 获取列表
 export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp()
-  return useQuery<Project[]>(['projects', param], () =>
+  return useQuery<Project[]>(['projects', cleanObject(param)], () =>
     client('projects', {
       data: param
     })

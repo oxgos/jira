@@ -1,5 +1,4 @@
 import { Button, Form, Input, Modal } from 'antd'
-import { useForm } from 'antd/lib/form/Form'
 import { TaskTypeSelect } from 'components/task-type-select'
 import { UserSelect } from 'components/user-select'
 import { useDeleteTask, useEditTask } from 'hooks/task'
@@ -12,7 +11,7 @@ const layout = {
 }
 
 export const TaskModal = () => {
-  const [form] = useForm()
+  const [form] = Form.useForm()
   const { editingTaskId, editingTask, close } = useTasksModal()
   const { mutateAsync: editTask, isLoading: editLoading } = useEditTask(
     useTasksQueryKey()
