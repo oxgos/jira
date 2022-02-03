@@ -1,5 +1,6 @@
 import { Button } from 'antd'
 import { ErrorBox, Row, ScreenContainer } from 'components/lib'
+import { Profiler } from 'components/profiler'
 import { useDebounce, useDocumentTitle } from 'hooks/common'
 import { useProjects } from 'hooks/project'
 import { useUsers } from 'hooks/user'
@@ -17,23 +18,25 @@ const ProjectListScreen = () => {
   const { data: users } = useUsers()
 
   return (
-    <ScreenContainer>
-      <Row between={true}>
-        <h1>项目列表</h1>
-        <Button onClick={open}>创建项目</Button>
-      </Row>
-      <SearchPanel
-        users={users || []}
-        param={param}
-        setParam={setParam}
-      ></SearchPanel>
-      <ErrorBox error={error} />
-      <List
-        loading={isLoading}
-        dataSource={list || []}
-        users={users || []}
-      ></List>
-    </ScreenContainer>
+    <Profiler id={'项目列表'}>
+      <ScreenContainer>
+        <Row between={true}>
+          <h1>项目列表</h1>
+          <Button onClick={open}>创建项目</Button>
+        </Row>
+        <SearchPanel
+          users={users || []}
+          param={param}
+          setParam={setParam}
+        ></SearchPanel>
+        <ErrorBox error={error} />
+        <List
+          loading={isLoading}
+          dataSource={list || []}
+          users={users || []}
+        ></List>
+      </ScreenContainer>
+    </Profiler>
   )
 }
 

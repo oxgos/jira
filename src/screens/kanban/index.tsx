@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Spin } from 'antd'
 import { Drag, Drop, DropChild } from 'components/drag-and-drop'
 import { ScreenContainer } from 'components/lib'
+import { Profiler } from 'components/profiler'
 import { useDocumentTitle } from 'hooks/common'
 import { useKanbans, useReorderKanban } from 'hooks/kanban'
 import { useReorderTask, useTasks } from 'hooks/task'
@@ -33,38 +34,40 @@ export const KanbanScreen = () => {
   const onDragEnd = useDragEnd()
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <ScreenContainer>
-        <h1>{currentProject?.name}看板</h1>
-        <SearchPanel />
-        {/* NOTE: 记录在笔记: KanbanColumn遍历渲染了3次,useTask只请求了一次，因为react-query的请求缓存优化, 默认2秒以内重复请求归并为一次 */}
-        {isLoading ? (
-          <Spin size={'large'} />
-        ) : (
-          <ColumnContainer>
-            <Drop
-              type={'COLUMN'}
-              direction={'horizontal'}
-              droppableId={'kanban'}
-            >
-              <DropChild style={{ display: 'flex' }}>
-                {kanbans?.map((kanban, index) => (
-                  <Drag
-                    key={String(kanban.id)}
-                    draggableId={'kanban' + kanban.id}
-                    index={index}
-                  >
-                    <KanbanColumn kanban={kanban} key={String(kanban.id)} />
-                  </Drag>
-                ))}
-              </DropChild>
-            </Drop>
-            <CreateKanban />
-          </ColumnContainer>
-        )}
-        <TaskModal />
-      </ScreenContainer>
-    </DragDropContext>
+    <Profiler id={'看板列表'}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <ScreenContainer>
+          <h1>{currentProject?.name}看板</h1>
+          <SearchPanel />
+          {/* NOTE: 记录在笔记: KanbanColumn遍历渲染了3次,useTask只请求了一次，因为react-query的请求缓存优化, 默认2秒以内重复请求归并为一次 */}
+          {isLoading ? (
+            <Spin size={'large'} />
+          ) : (
+            <ColumnContainer>
+              <Drop
+                type={'COLUMN'}
+                direction={'horizontal'}
+                droppableId={'kanban'}
+              >
+                <DropChild style={{ display: 'flex' }}>
+                  {kanbans?.map((kanban, index) => (
+                    <Drag
+                      key={String(kanban.id)}
+                      draggableId={'kanban' + kanban.id}
+                      index={index}
+                    >
+                      <KanbanColumn kanban={kanban} key={String(kanban.id)} />
+                    </Drag>
+                  ))}
+                </DropChild>
+              </Drop>
+              <CreateKanban />
+            </ColumnContainer>
+          )}
+          <TaskModal />
+        </ScreenContainer>
+      </DragDropContext>
+    </Profiler>
   )
 }
 
